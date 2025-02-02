@@ -1,5 +1,16 @@
 <template>
   <div class="main-container flex flex-column w-screen h-full" @click="handleClickOutside">
+    <!-- Добавление радиокнопок сверху -->
+    <div class="radio-container">
+      <input checked="" id="radio-free" name="radio" type="radio" />
+      <label for="radio-free">Охрана труда</label>
+      <input id="radio-basic" name="radio" type="radio" />
+      <label for="radio-basic">Финансовая грамотность</label>
+      <div class="glider-container">
+        <div class="glider"></div>
+      </div>
+    </div>
+
     <Button
         v-if="isVisible" class="scroll-btn flex align-items-center p-3 bg-gray-200 right-0 m-3 border-none active:bg-gray-300" @click="scrollToBottom">
       <i class="pi pi-chevron-down"></i>
@@ -72,8 +83,8 @@
 
 <script>
 import axios from "axios";
-import {marked} from "marked";
-import {chatExists, chatGenerate, getAnswer} from "../chat_api.js";
+import { marked } from "marked";
+import { chatExists, chatGenerate, getAnswer } from "../chat_api.js";
 
 // Глобальная переменная для хранения сессии
 const sessionStorage = {
@@ -83,6 +94,7 @@ const sessionStorage = {
 export default {
   data() {
     return {
+      selectedOption: 'Охрана труда',
       messages: [],
       newMessage: "",
       messageId: 0, // Для уникальных идентификаторов сообщений
@@ -95,6 +107,15 @@ export default {
     hasUserMessages() {
       return this.messages.some((message) => message.isUser);
     },
+    // Вычисляемое свойство для kb_id
+    kb_id() {
+      if (this.selectedOption === "Охрана труда") {
+        return "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
+      } else if (this.selectedOption === "Финансовая грамотность") {
+        return "новый-id-для-финансовой-грамотности"; // Идентификатор для другого направления
+      }
+      return ""; // Можно вернуть пустое значение или ошибку, если нужно
+    }
   },
   methods: {
     marked,
@@ -111,12 +132,11 @@ export default {
 
         const userMessage = this.newMessage;
         this.newMessage = "";
-        const kb_id = "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
         const tg = window.Telegram.WebApp;
         this.scrollToBottom();
 
         try {
-          const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), kb_id);
+          const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), this.kb_id);
           if (chat_id) {
             await chatGenerate(chat_id, userMessage);
             const answer = await getAnswer(chat_id);
@@ -228,6 +248,12 @@ export default {
 
 <style scoped>
 
+
+/* Стиль для выпадающих опций */
+header option {
+  font-size: 1rem; /* Размер шрифта для опций */
+}
+
 * {
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -248,7 +274,7 @@ mark {
 }
 
 .main-container {
-  position: absolute;
+
   background-color: #2a3f4f;
   overflow: auto;
 }
@@ -323,6 +349,94 @@ mark {
 .bin-button:active {
   transform: scale(0.9);
 }
+/* From Uiverse.io by Smit-Prajapati */
+.radio-container {
+  --main-color: #00bcd4; /* Сменили на яркий голубой */
+  --main-color-opacity: #00bcd41c; /* Полупрозрачный голубой */
 
+  /* change this according to inputs count */
+  --total-radio: 2; /* Изменено на 2 */
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 0.5rem;
+}
+
+.radio-container input {
+  cursor: pointer;
+  appearance: none;
+}
+
+.radio-container .glider-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(27, 27, 27, 1) 50%,
+      rgba(0, 0, 0, 0) 100%
+  );
+  width: 1px;
+}
+
+.radio-container .glider-container .glider {
+  position: relative;
+  height: calc(100% / var(--total-radio));
+  width: 100%;
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      var(--main-color) 50%,
+      rgba(0, 0, 0, 0) 100%
+  );
+  transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56);
+}
+
+.radio-container .glider-container .glider::before {
+  content: "";
+  position: absolute;
+  height: 60%;
+  width: 300%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--main-color);
+  filter: blur(10px);
+}
+
+.radio-container .glider-container .glider::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+      90deg,
+      var(--main-color-opacity) 0%,
+      rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.radio-container label {
+  cursor: pointer;
+  padding: 1rem;
+  position: relative;
+  color: grey;
+  transition: all 0.3s ease-in-out;
+}
+
+.radio-container input:checked + label {
+  color: var(--main-color);
+}
+
+.radio-container input:nth-of-type(1):checked ~ .glider-container .glider {
+  transform: translateY(0);
+}
+
+.radio-container input:nth-of-type(2):checked ~ .glider-container .glider {
+  transform: translateY(100%);
+}
 
 </style>
