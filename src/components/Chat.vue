@@ -1,9 +1,11 @@
 <template>
   <div class="main-container flex flex-column w-screen h-full" @click="handleClickOutside">
-    <!-- Добавление радиокнопок сверху -->
     <div class="radio-container flex flex-row gap-1 p-2">
       <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
               placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select" />
+      <button class="info-button p-2" size="large" @click="open_info">
+        <i class="pi pi-info-circle text-white"></i>
+      </button>
       <button v-if="hasUserMessages" class="bin-button flex" @click="clearChat">
         <svg
             class="bin-top"
@@ -81,7 +83,6 @@ import axios from "axios";
 import Select from "primevue/select";
 import { chatExists, chatGenerate, getAnswer } from "../chat_api.js";
 
-
 // Глобальная переменная для хранения сессии
 const sessionStorage = {
   messages: [],
@@ -119,6 +120,9 @@ export default {
       } else {
         this.selectedKbId = "d5db2804-5075-4b18-9978-ec0f7d1fcbc2"; // Идентификатор для другого направления
       }
+    },
+    open_info(){
+      this.$router.push('chat/info');
     },
     async sendMessage() {
       this.visibleGenMessage = true;
@@ -405,7 +409,12 @@ mark {
       rgba(0, 0, 0, 0) 100%
   );
 }
-
+.info-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  /* При желании можно добавить отступы или hover-эффекты */
+}
 .radio-container label {
   cursor: pointer;
   padding: 1rem;
