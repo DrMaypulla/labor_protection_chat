@@ -1,14 +1,44 @@
 <template>
   <div class="main-container flex flex-column w-screen h-full" @click="handleClickOutside">
     <!-- Добавление радиокнопок сверху -->
-    <div class="radio-container">
-      <input checked="" id="radio-free" name="radio" type="radio" />
-      <label for="radio-free">Охрана труда</label>
-      <input id="radio-basic" name="radio" type="radio" />
-      <label for="radio-basic">Финансовая грамотность</label>
-      <div class="glider-container">
-        <div class="glider"></div>
-      </div>
+    <div class="radio-container flex flex-row gap-1 p-2">
+      <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
+              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select" />
+      <button v-if="hasUserMessages" class="bin-button flex" @click="clearChat">
+        <svg
+            class="bin-top"
+            viewBox="0 0 39 7"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+          <line y1="5" x2="39" y2="5" stroke="white" stroke-width="4"></line>
+          <line
+              x1="12"
+              y1="1.5"
+              x2="26.0357"
+              y2="1.5"
+              stroke="white"
+              stroke-width="3"
+          ></line>
+        </svg>
+        <svg
+            class="bin-bottom"
+            viewBox="0 0 33 39"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+          <mask id="path-1-inside-1_8_19" fill="white">
+            <path
+                d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"
+            ></path>
+          </mask>
+          <path
+              d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
+              fill="white"
+              mask="url(#path-1-inside-1_8_19)"
+          ></path>
+          <path d="M12 6L12 29" stroke="white" stroke-width="4"></path>
+          <path d="M21 6V29" stroke="white" stroke-width="4"></path>
+        </svg>
+      </button>
     </div>
 
     <Button
@@ -16,41 +46,6 @@
       <i class="pi pi-chevron-down"></i>
     </Button>
 
-    <button v-if="hasUserMessages" class="bin-button" @click="clearChat">
-      <svg
-          class="bin-top"
-          viewBox="0 0 39 7"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-        <line y1="5" x2="39" y2="5" stroke="white" stroke-width="4"></line>
-        <line
-            x1="12"
-            y1="1.5"
-            x2="26.0357"
-            y2="1.5"
-            stroke="white"
-            stroke-width="3"
-        ></line>
-      </svg>
-      <svg
-          class="bin-bottom"
-          viewBox="0 0 33 39"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-        <mask id="path-1-inside-1_8_19" fill="white">
-          <path
-              d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"
-          ></path>
-        </mask>
-        <path
-            d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
-            fill="white"
-            mask="url(#path-1-inside-1_8_19)"
-        ></path>
-        <path d="M12 6L12 29" stroke="white" stroke-width="4"></path>
-        <path d="M21 6V29" stroke="white" stroke-width="4"></path>
-      </svg>
-    </button>
 
     <div ref="messagesContainer" class="flex flex-column h-full overflow-y-scroll mx-1">
       <div v-if="this.messages.length === 0" class="flex h-full w-full align-items-center justify-content-center">
@@ -83,8 +78,9 @@
 
 <script>
 import axios from "axios";
-import { marked } from "marked";
+import Select from "primevue/select";
 import { chatExists, chatGenerate, getAnswer } from "../chat_api.js";
+
 
 // Глобальная переменная для хранения сессии
 const sessionStorage = {
@@ -92,33 +88,38 @@ const sessionStorage = {
 };
 
 export default {
+  components: {
+    Select
+  },
   data() {
     return {
-      selectedOption: 'Охрана труда',
+      selectedOption: { name: 'Охрана труда', code: 'LP' },
+      selectedKbId: "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb",
       messages: [],
       newMessage: "",
       messageId: 0, // Для уникальных идентификаторов сообщений
       isVisible: false,
       visibleGenMessage: false,
-      sendButtonEnabled: false
+      sendButtonEnabled: false,
+      kbs: [
+        { name: 'Охрана труда', code: 'LP' },
+        { name: 'Финансовая грамотность', code: 'FL' },
+      ]
     };
   },
   computed: {
     hasUserMessages() {
       return this.messages.some((message) => message.isUser);
     },
-    // Вычисляемое свойство для kb_id
-    kb_id() {
-      if (this.selectedOption === "Охрана труда") {
-        return "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
-      } else if (this.selectedOption === "Финансовая грамотность") {
-        return "новый-id-для-финансовой-грамотности"; // Идентификатор для другого направления
-      }
-      return ""; // Можно вернуть пустое значение или ошибку, если нужно
-    }
   },
   methods: {
-    marked,
+    kb_id() {
+      if (this.selectedOption === { name: 'Охрана труда', code: 'LP' }) {
+        this.selectedKbId = "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
+      } else {
+        this.selectedKbId = "d5db2804-5075-4b18-9978-ec0f7d1fcbc2"; // Идентификатор для другого направления
+      }
+    },
     async sendMessage() {
       this.visibleGenMessage = true;
       if (this.newMessage.trim()) {
@@ -132,15 +133,15 @@ export default {
 
         const userMessage = this.newMessage;
         this.newMessage = "";
+        let kb_id = this.selectedKbId;
         const tg = window.Telegram.WebApp;
         this.scrollToBottom();
 
         try {
-          const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), this.kb_id);
+          const chat_id = await chatExists(tg.initDataUnsafe.user.id, kb_id);
           if (chat_id) {
             await chatGenerate(chat_id, userMessage);
             const answer = await getAnswer(chat_id);
-
             if (answer) {
               this.messages.push({
                 id: this.messageId++,
@@ -209,20 +210,9 @@ export default {
         });
       }
     },
-    handleClickOutside(event) {
-      const inputField = this.$refs.inputField;
-      if (inputField && !inputField.contains(event.target)) {
-        this.hideKeyboard();
-      }
-    },
-    hideKeyboard() {
-      if (this.$refs.inputField) {
-        this.$refs.inputField.blur();
-      }
-    },
     clearChat() {
       // Очищаем массив сообщений и сбрасываем счетчик ID
-      setTimeout(() => {
+      setTimeout (() => {
         this.messages = [];
         this.messageId = 0;
         sessionStorage.messages = [];
@@ -308,9 +298,6 @@ mark {
 }
 
 .bin-button {
-  position: fixed; /* Фиксированное положение кнопки */
-  top: 10px; /* Отступ сверху */
-  right: 10px; /* Отступ справа */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -437,6 +424,31 @@ mark {
 
 .radio-container input:nth-of-type(2):checked ~ .glider-container .glider {
   transform: translateY(100%);
+}
+
+.my-select {
+  --p-select-background: transparent;
+  --p-select-color: white;
+  --p-select-border-color: white;
+  --p-select-focus-border-color: white;
+  --p-select-option-selected-background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(27, 27, 27, 1) 50%,
+      rgba(0, 0, 0, 0) 100%
+  );
+  --p-select-option-focus-background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(27, 27, 27, 1) 50%,
+      rgba(0, 0, 0, 0) 100%
+  );
+  --p-select-option-selected-focus-background:  linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(27, 27, 27, 1) 50%,
+      rgba(0, 0, 0, 0) 100%
+  );
 }
 
 </style>
