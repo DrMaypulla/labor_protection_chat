@@ -6,7 +6,7 @@ import Chat from "../components/Chat.vue";
 import Info from "../components/info.vue";
 
 const routes = [
-    { path: '', component: News},
+    { path: '', component: Chat},
     { path: '/news', component: News},
     { path: '/chat', component: Chat},
     { path: '/chat/info', component: Info},
