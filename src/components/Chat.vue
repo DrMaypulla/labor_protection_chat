@@ -2,9 +2,9 @@
   <div class="main-container flex flex-column w-screen h-full" @click="handleClickOutside">
     <div class="radio-container flex flex-row gap-1 p-2">
       <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
-              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select" />
+              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select bg-gray-400" />
       <button class="info-button p-2" size="large" @click="open_info">
-        <i class="pi pi-info-circle text-white"></i>
+        <i class="pi pi-info-circle text-gray-900"></i>
       </button>
       <button v-if="hasUserMessages" class="bin-button flex" @click="clearChat">
         <svg
@@ -269,7 +269,7 @@ mark {
 
 .main-container {
 
-  background-color: #2a3f4f;
+  background-color: #ededed;
   overflow: auto;
 }
 
@@ -283,7 +283,7 @@ mark {
 }
 
 .bot-message {
-  background-color: #3a4f5f; /* Цвет для ответов бота */
+  background-color: #3e3e3e; /* Цвет для ответов бота */
   color: white;
   margin-right: auto; /* Выравнивание влево */
   font-size: medium;
@@ -413,6 +413,7 @@ mark {
   background: transparent;
   border: none;
   cursor: pointer;
+  scale: 150%;
   /* При желании можно добавить отступы или hover-эффекты */
 }
 .radio-container label {
@@ -458,6 +459,8 @@ mark {
       rgba(27, 27, 27, 1) 50%,
       rgba(0, 0, 0, 0) 100%
   );
+
+
 }
 
 </style>

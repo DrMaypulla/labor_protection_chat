@@ -41,8 +41,8 @@ export default {
     <RouterView />
   </div>
   <div class="flex justify-content-center align-items-center w-screen bottom-0 menu-container">
-    <div v-for="i in items" :key="i" class="w-full h-full hover:bg-primary-800">
-      <RouterLink :to="i.link" class="flex flex-column w-full h-full justify-content-center text-gray-100">
+    <div v-for="i in items" :key="i" class="w-full h-full">
+      <RouterLink :to="i.link" class="flex flex-column w-full h-full justify-content-center text-gray-100 bg-gray-400 active:bg-gray-500 hover:bg-gray-500">
         <span :class="i.icon"/>
         <span>{{ i.label }}</span>
       </RouterLink>
