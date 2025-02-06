@@ -87,8 +87,8 @@ export default {
   left: 0;
   width: 100vw; /* 100% ширины окна */
   height: 100vh; /* 100% высоты окна */
-  background-color: #213547;
-  color: white;
+  background-color: #ededed;
+  color: rgb(0, 0, 0);
   padding: 2rem;
   text-align: justify;
   overflow-y: auto; /* Прокрутка при необходимости */
@@ -96,7 +96,7 @@ export default {
 
 
 h2, h3 {
-  color: #ffffff;
+  color: #000000;
   text-align: center;
 }
 
