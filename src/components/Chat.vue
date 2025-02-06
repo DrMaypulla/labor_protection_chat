@@ -1,8 +1,8 @@
 <template>
-  <div class="main-container flex flex-column w-screen h-full" @click="handleClickOutside">
+  <div class="main-container flex flex-column w-screen h-full bg-gray-100" @click="handleClickOutside">
     <div class="radio-container flex flex-row gap-1 p-2">
       <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
-              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select bg-gray-400" />
+              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
       <button class="info-button p-2" size="large" @click="open_info">
         <i class="pi pi-info-circle text-gray-900"></i>
       </button>
@@ -51,14 +51,14 @@
 
     <div ref="messagesContainer" class="flex flex-column h-full overflow-y-scroll mx-1">
       <div v-if="this.messages.length === 0" class="flex h-full w-full align-items-center justify-content-center">
-        <div class="bg-black-alpha-30 border-round w-full m-4 px-4 py-6">
+        <div class="bg-blue-100 border-round w-full text-black-alpha-90 m-4 px-4 py-6">
           <p><strong>Приветствую, дорогой пользователь!</strong></p>
           <p>Вы можете получить ответы на различные вопросы по направлению охраны труда. Для этого напишите Ваш вопрос ниже</p>
           <img class="bot_gif_size" src="/output-onlinegiftools.gif" alt="robot" />
         </div>
       </div>
       <div v-for="message in messages" :key="message.id">
-        <div class="bg-black-alpha-30 p-2 border-round-bottom text-left"
+        <div class="bg-blue-100 p-2 border-round-bottom text-left text-black-alpha-90"
              :class="{'flex user-message my-2 max-w-18rem': message.isUser, 'flex bot-message max-w-18rem': !message.isUser,}">
           {{ message.text }}
         </div>
@@ -249,7 +249,6 @@ header option {
 }
 
 * {
-  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -438,9 +437,9 @@ mark {
 
 .my-select {
   --p-select-background: transparent;
-  --p-select-color: white;
   --p-select-border-color: white;
   --p-select-focus-border-color: white;
+  --p-select-color: black;
   --p-select-option-selected-background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0) 0%,
