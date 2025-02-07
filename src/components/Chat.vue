@@ -51,10 +51,10 @@
 
     <div ref="messagesContainer" class="flex flex-column h-full overflow-y-scroll mx-1">
       <div v-if="this.messages.length === 0" class="flex h-full w-full align-items-center justify-content-center">
-        <div class="bg-blue-100 border-round w-full text-black-alpha-90 m-4 px-4 py-6">
+        <div class="bg-blue-100 border-round w-full text-black-alpha-90 m-4 px-4 py-6 text-lg">
           <p><strong>Приветствую, дорогой пользователь!</strong></p>
-          <p>Вы можете получить ответы на различные вопросы по направлению охраны труда. Для этого напишите Ваш вопрос ниже</p>
-          <img class="bot_gif_size" src="/output-onlinegiftools.gif" alt="robot" />
+          <p>Вы можете получить ответы на различные вопросы по выбранному нгаправлению.</p>
+            <p>Для этого выберите раздел и напишите Ваш вопрос ниже</p>
         </div>
       </div>
       <div v-for="message in messages" :key="message.id">
