@@ -107,7 +107,8 @@ export async function getAnswer(chatId) {
             for (let i = messages.length - 1; i >= 0; i--) {
                 const message = messages[i];
                 if (message.role === "assistant") {
-                    const answer = message.content;
+                    let answer = message.content;
+                    answer = answer.replaceAll('*','');
                     console.log(answer);
                     // Очищаем чат после получения ответа
                     await msgClear(chatId);
