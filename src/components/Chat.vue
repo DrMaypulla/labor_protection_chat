@@ -2,7 +2,7 @@
   <div class="main-container flex flex-column w-screen h-full bg-gray-100" @click="handleClickOutside">
     <div class="radio-container flex flex-row gap-1 p-2">
       <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
-              placeholder="Выберите базу знаний" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
+              placeholder="Выберите раздел" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
       <button class="info-button p-2" size="large" @click="open_info">
         <i class="pi pi-info-circle text-gray-900"></i>
       </button>
@@ -53,7 +53,7 @@
       <div v-if="this.messages.length === 0" class="flex h-full w-full align-items-center justify-content-center">
         <div class="bg-blue-100 border-round w-full text-black-alpha-90 m-4 px-4 py-6 text-lg">
           <p><strong>Приветствую, дорогой пользователь!</strong></p>
-          <p>Вы можете получить ответы на различные вопросы по выбранному нгаправлению.</p>
+          <p>Вы можете получить ответы на различные вопросы по выбранному направлению.</p>
             <p>Для этого выберите раздел и напишите Ваш вопрос ниже</p>
         </div>
       </div>
@@ -68,10 +68,10 @@
       </div>
     </div>
     <div class="flex w-full align-items-end p-2 h-5rem">
-      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-3rem w-full p-2" placeholder="Сообщение..."/>
+      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-4rem w-full p-2" placeholder="Сообщение..."/>
       <button
           v-bind:disabled="this.sendButtonEnabled" @click="sendMessage"
-          class="ml-2 bg-primary h-3rem hover:bg-primary-800 border-none active:bg-primary-600 outline-none">
+          class="ml-2 bg-primary h-4rem hover:bg-primary-800 border-none active:bg-primary-600 outline-none">
         <i class="pi pi-send"></i>
       </button>
     </div>
@@ -94,8 +94,8 @@ export default {
   },
   data() {
     return {
-      selectedOption: { name: 'Охрана труда', code: 'LP' },
-      selectedKbId: "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb",
+      selectedOption: null,
+      selectedKbId: "",
       messages: [],
       newMessage: "",
       messageId: 0, // Для уникальных идентификаторов сообщений
@@ -115,10 +115,15 @@ export default {
   },
   methods: {
     kb_id() {
-      if (this.selectedOption === { name: 'Охрана труда', code: 'LP' }) {
+      if (!this.selectedOption) {
+        this.selectedKbId = "";
+        return;
+      }
+      
+      if (this.selectedOption.code === 'LP') {
         this.selectedKbId = "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
       } else {
-        this.selectedKbId = "d5db2804-5075-4b18-9978-ec0f7d1fcbc2"; // Идентификатор для другого направления
+        this.selectedKbId = "d5db2804-5075-4b18-9978-ec0f7d1fcbc2";
       }
     },
     open_info(){
@@ -330,6 +335,18 @@ mark {
 
 .bin-button:hover .bin-top {
   transform: rotate(45deg);
+}
+
+.my-select ::placeholder {
+  color: #333;
+  opacity: 1;
+  font-weight: bold;
+}
+
+.input::placeholder {
+  color: #333;
+  opacity: 1;
+  font-size: large;
 }
 
 .bin-button:hover {
