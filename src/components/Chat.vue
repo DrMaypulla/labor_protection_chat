@@ -3,9 +3,9 @@
     <div class="radio-container flex flex-row gap-1 p-2">
       <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
               placeholder="Выберите раздел" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
-      <button class="info-button p-2" size="large" @click="open_info">
-        <i class="pi pi-info-circle text-gray-900"></i>
-      </button>
+<!--      <button class="info-button p-2" size="large" @click="open_info">-->
+<!--        <i class="pi pi-info-circle text-gray-900"></i>-->
+<!--      </button>-->
       <button v-if="hasUserMessages" class="bin-button flex" @click="clearChat">
         <svg
             class="bin-top"
@@ -68,7 +68,7 @@
       </div>
     </div>
     <div class="flex w-full align-items-end p-2 h-5rem">
-      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-4rem w-full p-2" placeholder="Сообщение..."/>
+      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-4rem w-full p-2" placeholder="Введите вопрос.."/>
       <button
           v-bind:disabled="this.sendButtonEnabled" @click="sendMessage"
           class="ml-2 bg-primary h-4rem hover:bg-primary-800 border-none active:bg-primary-600 outline-none">

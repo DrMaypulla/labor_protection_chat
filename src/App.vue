@@ -2,14 +2,15 @@
 import Menu from "primevue/menu"
 import News from "./components/News.vue";
 import Chat from "./components/Chat.vue";
+import Info from "./components/info.vue";
 import Toast from 'primevue/toast';
-import instance from "./Api/instance.js";
 export default {
   components: {
     Menu,
     News,
     Chat,
-    Toast
+    Toast,
+    Info
   },
   data() {
     return {
@@ -23,6 +24,11 @@ export default {
           label: 'ИИ',
           icon: 'pi pi-microchip-ai',
           link: '/chat'
+        },
+        {
+          label: 'Справка',
+          icon: 'pi pi-info-circle text-gray-900',
+          link: '/info'
         }
       ]
     };

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {marked} from "marked";
 
 const BASE_URL = "https://finlit-test.store";
 

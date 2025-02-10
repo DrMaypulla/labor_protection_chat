@@ -9,7 +9,7 @@ const routes = [
     { path: '', component: Chat},
     { path: '/news', component: News},
     { path: '/chat', component: Chat},
-    { path: '/chat/info', component: Info},
+    { path: '/info', component: Info},
 ];
 
 const router = createRouter({
