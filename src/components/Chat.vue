@@ -121,9 +121,9 @@ export default {
       }
       
       if (this.selectedOption.code === 'LP') {
-        this.selectedKbId = "fc5fe99a-8b68-4cc5-b9ee-cc5d82d66cbb";
+        this.selectedKbId = "3ea5b1af-130c-4881-8f5a-3fe8925a1b39";
       } else {
-        this.selectedKbId = "d5db2804-5075-4b18-9978-ec0f7d1fcbc2";
+        this.selectedKbId = "201e9a1e-eb77-4923-943e-c87c9dea5033";
       }
     },
     open_info(){
