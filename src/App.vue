@@ -16,14 +16,14 @@ export default {
     return {
       items: [
         {
-          label: 'Новости',
-          icon: 'pi pi-home',
-          link: '/news'
-        },
-        {
           label: 'ИИ',
           icon: 'pi pi-microchip-ai',
           link: '/chat'
+        },
+        {
+          label: 'Новости',
+          icon: 'pi pi-home',
+          link: '/news'
         },
         {
           label: 'Справка',
