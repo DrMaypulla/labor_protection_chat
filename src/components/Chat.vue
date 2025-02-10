@@ -119,12 +119,14 @@ export default {
         this.selectedKbId = "";
         return;
       }
-      
+
       if (this.selectedOption.code === 'LP') {
         this.selectedKbId = "3ea5b1af-130c-4881-8f5a-3fe8925a1b39";
       } else {
         this.selectedKbId = "201e9a1e-eb77-4923-943e-c87c9dea5033";
       }
+      //Добавить сохранение состояния select
+      //Если бз не выбрана, уведомелние...
     },
     open_info(){
       this.$router.push('chat/info');
@@ -147,7 +149,7 @@ export default {
         this.scrollToBottom();
 
         try {
-          const chat_id = await chatExists(tg.initDataUnsafe.user.id, kb_id);
+          const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), kb_id);
           if (chat_id) {
             await chatGenerate(chat_id, userMessage);
             const answer = await getAnswer(chat_id);
