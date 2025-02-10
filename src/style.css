@@ -27,7 +27,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #2A3F4F; /* Изменяем фон на темно-синий */
+  background-color: wheat; /* Изменяем фон на темно-синий */
 }
 
 h1 {
