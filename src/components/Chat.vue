@@ -357,6 +357,13 @@ mark {
   font-weight: bold;
 }
 
+.input {
+  font-size: 1.25rem;
+  height: 4rem; 
+  padding: 1rem; 
+}
+
+
 .input::placeholder {
   color: #979797;
   opacity: 1;
