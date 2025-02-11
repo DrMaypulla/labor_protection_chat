@@ -5,6 +5,6 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    allowedHosts: ["databases-shoppers-treasure-stat.trycloudflare.com"],
+    allowedHosts: ["https://sussex-cooperation-un-province.trycloudflare.com"],
   }
 })

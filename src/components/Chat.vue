@@ -1,8 +1,13 @@
 <template>
   <div class="main-container flex flex-column w-screen h-full bg-gray-100" @click="handleClickOutside">
     <div class="radio-container flex flex-row gap-1 p-2">
-      <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
-              placeholder="Выберите раздел" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
+      <div class="flex flex-column w-full">
+        <Select v-model="selectedOption" :options="kbs" optionLabel="name" :default-value="this.selectedOption"
+                placeholder="Выберите раздел" @change="this.kb_id" class="w-full flex my-select bg-blue-100 text-black-alpha-90" />
+        <div v-if="noSelectedOptionError" class="text-left p-2 mt-1 bg-red-400 text-white border-round" >
+          Пожалуйста, выберите раздел!
+        </div>
+      </div>
 <!--      <button class="info-button p-2" size="large" @click="open_info">-->
 <!--        <i class="pi pi-info-circle text-gray-900"></i>-->
 <!--      </button>-->
@@ -68,7 +73,7 @@
       </div>
     </div>
     <div class="flex w-full align-items-end p-2 h-5rem">
-      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-4rem w-full p-2" placeholder="Введите вопрос.."/>
+      <input type="text" v-model="newMessage" @keyup.enter="sendMessage" class="input border-round border-none h-4rem w-full p-2" placeholder="Введите вопрос..."/>
       <button
           v-bind:disabled="this.sendButtonEnabled" @click="sendMessage"
           class="ml-2 bg-primary h-4rem hover:bg-primary-800 border-none active:bg-primary-600 outline-none">
@@ -94,6 +99,7 @@ export default {
   },
   data() {
     return {
+      noSelectedOptionError: false,
       selectedOption: null,
       selectedKbId: "",
       messages: [],
@@ -125,6 +131,7 @@ export default {
       } else {
         this.selectedKbId = "201e9a1e-eb77-4923-943e-c87c9dea5033";
       }
+      this.noSelectedOptionError = false;
       //Добавить сохранение состояния select
       //Если бз не выбрана, уведомелние...
     },
@@ -132,61 +139,66 @@ export default {
       this.$router.push('chat/info');
     },
     async sendMessage() {
-      this.visibleGenMessage = true;
-      if (this.newMessage.trim()) {
-        // Сохраняем сообщение пользователя
-        this.messages.push({
-          id: this.messageId++,
-          text: this.newMessage,
-          isUser: true,
-        });
-        this.scrollToBottom();
+      if (this.selectedOption === null) {
+        this.noSelectedOptionError = true;
+      } else {
+        this.noSelectedOptionError = false;
+        this.visibleGenMessage = true;
+        if (this.newMessage.trim()) {
+          // Сохраняем сообщение пользователя
+          this.messages.push({
+            id: this.messageId++,
+            text: this.newMessage,
+            isUser: true,
+          });
+          this.scrollToBottom();
 
-        const userMessage = this.newMessage;
-        this.newMessage = "";
-        let kb_id = this.selectedKbId;
-        const tg = window.Telegram.WebApp;
-        this.scrollToBottom();
+          const userMessage = this.newMessage;
+          this.newMessage = "";
+          let kb_id = this.selectedKbId;
+          const tg = window.Telegram.WebApp;
+          this.scrollToBottom();
 
-        try {
-          const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), kb_id);
-          if (chat_id) {
-            await chatGenerate(chat_id, userMessage);
-            const answer = await getAnswer(chat_id);
-            if (answer) {
-              this.messages.push({
-                id: this.messageId++,
-                text: answer || "Ответ не найден.",
-                isUser: false,
-              });
+          try {
+            const chat_id = await chatExists(tg.initDataUnsafe.user.id.toString(), kb_id);
+            if (chat_id) {
+              await chatGenerate(chat_id, userMessage);
+              const answer = await getAnswer(chat_id);
+              if (answer) {
+                this.messages.push({
+                  id: this.messageId++,
+                  text: answer || "Ответ не найден.",
+                  isUser: false,
+                });
+              } else {
+                this.messages.push({
+                  id: this.messageId++,
+                  text: "Ответ не был получен.",
+                  isUser: false,
+                });
+              }
             } else {
               this.messages.push({
                 id: this.messageId++,
-                text: "Ответ не был получен.",
+                text: "Не удалось найти или создать чат.",
                 isUser: false,
               });
             }
-          } else {
+          } catch (error) {
+            console.error("Ошибка при обработке сообщения:", error);
             this.messages.push({
               id: this.messageId++,
-              text: "Не удалось найти или создать чат.",
+              text: "Произошла ошибка. Попробуйте позже.",
               isUser: false,
             });
+            this.saveSession();
+          } finally {
+            this.scrollToBottom();
+            this.visibleGenMessage = false;
+            this.sendButtonEnabled = false;
           }
-        } catch (error) {
-          console.error("Ошибка при обработке сообщения:", error);
-          this.messages.push({
-            id: this.messageId++,
-            text: "Произошла ошибка. Попробуйте позже.",
-            isUser: false,
-          });
-          this.saveSession();
-        } finally {
-          this.scrollToBottom();
-          this.visibleGenMessage = false;
-          this.sendButtonEnabled = false;
-        }
       }
+    }
     },
     scrollToBottom() {
       this.$nextTick(() => {
@@ -346,7 +358,7 @@ mark {
 }
 
 .input::placeholder {
-  color: #333;
+  color: #979797;
   opacity: 1;
   font-size: large;
 }
